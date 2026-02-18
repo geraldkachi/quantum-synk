@@ -1,0 +1,1692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>QuantumSynk — Engineering Intelligence for Business</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+<style>
+/* ── CSS Variables ── */
+:root {
+  --green: #89C441;
+  --green-dim: #6fa332;
+  --green-glow: rgba(137,196,65,0.18);
+  --green-subtle: rgba(137,196,65,0.08);
+  --black: #000000;
+  --off-black: #0a0a0a;
+  --gray-dark: #111111;
+  --gray-mid: #1a1a1a;
+  --gray-border: #222222;
+  --gray-text: #777777;
+  --white: #ffffff;
+  --white-80: rgba(255,255,255,0.80);
+  --white-50: rgba(255,255,255,0.50);
+  --white-20: rgba(255,255,255,0.20);
+  --white-08: rgba(255,255,255,0.08);
+}
+
+/* ── Reset & Base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--black);
+  color: var(--white);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  cursor: none;
+}
+
+.mono { font-family: 'JetBrains Mono', monospace; }
+
+/* ── Custom Cursor ── */
+#cursor {
+  width: 12px; height: 12px;
+  background: var(--green);
+  border-radius: 50%;
+  position: fixed; top: 0; left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.15s ease, background 0.2s;
+  transform: translate(-50%, -50%);
+}
+#cursor-ring {
+  width: 36px; height: 36px;
+  border: 1.5px solid var(--green);
+  border-radius: 50%;
+  position: fixed; top: 0; left: 0;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: transform 0.35s cubic-bezier(0.22,1,0.36,1), opacity 0.3s;
+  opacity: 0.6;
+}
+
+/* ── Animations ── */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideRight {
+  from { opacity: 0; transform: translateX(-28px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes pulseGreen {
+  0%, 100% { box-shadow: 0 0 0 0 var(--green-glow); }
+  50%       { box-shadow: 0 0 0 12px rgba(137,196,65,0); }
+}
+@keyframes rotateSlow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
+@keyframes gridPulse {
+  0%, 100% { opacity: 0.03; }
+  50%       { opacity: 0.07; }
+}
+@keyframes lineGrow {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+.animate-slide-up    { animation: slideUp   0.6s ease-out forwards; }
+.animate-slide-right { animation: slideRight 0.6s ease-out forwards; }
+.animate-fade        { animation: fadeIn    0.8s ease-out forwards; }
+.animate-scale       { animation: scaleIn   0.6s ease-out forwards; }
+
+/* ── Noise texture overlay ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+}
+
+/* ── Grid background ── */
+.grid-bg {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(var(--white-08) 1px, transparent 1px),
+    linear-gradient(90deg, var(--white-08) 1px, transparent 1px);
+  background-size: 60px 60px;
+  animation: gridPulse 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 0 48px;
+  height: 72px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--gray-border);
+}
+
+.nav-logo {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none;
+}
+.logo-mark {
+  width: 36px; height: 36px;
+  position: relative;
+}
+.logo-mark svg { width: 36px; height: 36px; }
+.logo-text {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--white);
+}
+.logo-text span { color: var(--green); }
+
+.nav-links {
+  display: flex; align-items: center; gap: 36px;
+  list-style: none;
+}
+.nav-links a {
+  color: var(--white-50);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--white); }
+
+.nav-cta {
+  display: flex; align-items: center; gap: 16px;
+}
+.btn-nav {
+  padding: 9px 22px;
+  border: 1px solid var(--green);
+  background: transparent;
+  color: var(--green);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: none;
+  transition: all 0.25s;
+  letter-spacing: 0.01em;
+}
+.btn-nav:hover {
+  background: var(--green);
+  color: var(--black);
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; justify-content: center;
+  position: relative;
+  padding: 120px 48px 80px;
+  overflow: hidden;
+}
+
+.hero-glow {
+  position: absolute;
+  top: -200px; left: 50%;
+  transform: translateX(-50%);
+  width: 900px; height: 600px;
+  background: radial-gradient(ellipse at center, rgba(137,196,65,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-glow-2 {
+  position: absolute;
+  bottom: -100px; right: -200px;
+  width: 600px; height: 600px;
+  background: radial-gradient(ellipse at center, rgba(137,196,65,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--green);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: slideRight 0.6s ease-out 0.2s forwards;
+}
+.hero-eyebrow::before {
+  content: '';
+  display: block;
+  width: 32px; height: 1px;
+  background: var(--green);
+}
+
+.hero-headline {
+  font-size: clamp(3rem, 7vw, 6.5rem);
+  font-weight: 900;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  max-width: 900px;
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: slideUp 0.7s ease-out 0.35s forwards;
+}
+.hero-headline .accent { color: var(--green); }
+.hero-headline .outline {
+  -webkit-text-stroke: 2px var(--white-20);
+  color: transparent;
+}
+
+.hero-sub {
+  font-size: 1.15rem;
+  font-weight: 400;
+  color: var(--white-50);
+  max-width: 520px;
+  line-height: 1.7;
+  margin-bottom: 48px;
+  opacity: 0;
+  animation: slideUp 0.7s ease-out 0.5s forwards;
+}
+
+.hero-actions {
+  display: flex; align-items: center; gap: 16px;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: slideUp 0.7s ease-out 0.65s forwards;
+}
+
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 16px 32px;
+  background: var(--green);
+  color: var(--black);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  cursor: none;
+  text-decoration: none;
+  transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+  letter-spacing: 0.01em;
+}
+.btn-primary:hover {
+  background: #9fd44d;
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px rgba(137,196,65,0.3);
+}
+.btn-primary svg { transition: transform 0.2s; }
+.btn-primary:hover svg { transform: translateX(4px); }
+
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 16px 32px;
+  background: transparent;
+  color: var(--white-80);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border: 1px solid var(--gray-border);
+  border-radius: 8px;
+  cursor: none;
+  text-decoration: none;
+  transition: all 0.25s;
+}
+.btn-secondary:hover {
+  border-color: var(--white-50);
+  color: var(--white);
+  background: var(--white-08);
+}
+
+.hero-badges {
+  display: flex; align-items: center; gap: 24px;
+  margin-top: 64px;
+  opacity: 0;
+  animation: fadeIn 0.8s ease-out 0.9s forwards;
+}
+.badge-divider { width: 1px; height: 28px; background: var(--gray-border); }
+.badge-item {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 0.8rem;
+  color: var(--gray-text);
+  font-weight: 400;
+}
+.badge-dot {
+  width: 6px; height: 6px;
+  background: var(--green);
+  border-radius: 50%;
+  animation: pulseGreen 2s ease-in-out infinite;
+}
+
+/* Hero floating visual */
+.hero-visual {
+  position: absolute;
+  right: 48px; top: 50%;
+  transform: translateY(-50%);
+  width: 420px; height: 420px;
+  opacity: 0;
+  animation: fadeIn 1s ease-out 0.7s forwards;
+}
+.hero-ring {
+  position: absolute; inset: 0;
+  border: 1px solid rgba(137,196,65,0.2);
+  border-radius: 50%;
+  animation: rotateSlow 20s linear infinite;
+}
+.hero-ring-2 {
+  position: absolute; inset: 30px;
+  border: 1px solid rgba(137,196,65,0.1);
+  border-radius: 50%;
+  animation: rotateSlow 15s linear infinite reverse;
+}
+.hero-ring-3 {
+  position: absolute; inset: 70px;
+  border: 1px solid rgba(137,196,65,0.15);
+  border-radius: 50%;
+  animation: rotateSlow 25s linear infinite;
+}
+.hero-center {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120px; height: 120px;
+  background: var(--gray-dark);
+  border: 1px solid rgba(137,196,65,0.3);
+  border-radius: 24px;
+  display: flex; align-items: center; justify-content: center;
+  animation: float 4s ease-in-out infinite;
+}
+.hero-orbit-dot {
+  position: absolute;
+  width: 10px; height: 10px;
+  background: var(--green);
+  border-radius: 50%;
+  top: 12px; left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 12px rgba(137,196,65,0.6);
+}
+.hero-orbit-dot-2 {
+  position: absolute;
+  width: 6px; height: 6px;
+  background: var(--white-50);
+  border-radius: 50%;
+  bottom: 30px; right: 30px;
+}
+
+/* ── SECTION SHARED ── */
+section {
+  position: relative;
+  padding: 120px 48px;
+}
+
+.section-label {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--green);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.section-label::before {
+  content: '';
+  display: block;
+  width: 24px; height: 1px;
+  background: var(--green);
+}
+
+.section-title {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  margin-bottom: 16px;
+}
+.section-title .accent { color: var(--green); }
+
+.section-sub {
+  color: var(--white-50);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  max-width: 520px;
+}
+
+/* ── STATS TICKER ── */
+.stats-bar {
+  background: var(--gray-dark);
+  border-top: 1px solid var(--gray-border);
+  border-bottom: 1px solid var(--gray-border);
+  padding: 0;
+  overflow: hidden;
+}
+.stats-inner {
+  display: flex;
+}
+.stats-track {
+  display: flex; gap: 0;
+  animation: scrollTrack 30s linear infinite;
+  white-space: nowrap;
+}
+@keyframes scrollTrack {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.stat-pill {
+  display: flex; align-items: center; gap: 10px;
+  padding: 20px 48px;
+  border-right: 1px solid var(--gray-border);
+  flex-shrink: 0;
+}
+.stat-pill-num {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--green);
+  letter-spacing: -0.02em;
+}
+.stat-pill-label {
+  font-size: 0.8rem;
+  color: var(--gray-text);
+  font-weight: 400;
+}
+
+/* ── SERVICES ── */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  margin-top: 64px;
+  border: 1px solid var(--gray-border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.service-card {
+  background: var(--gray-dark);
+  padding: 48px 40px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+  cursor: none;
+}
+.service-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, var(--green-subtle), transparent);
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+.service-card:hover::before { opacity: 1; }
+.service-card:hover { transform: translateY(-4px); z-index: 2; }
+
+.service-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--green);
+  letter-spacing: 0.1em;
+  margin-bottom: 28px;
+  display: block;
+}
+
+.service-icon {
+  width: 52px; height: 52px;
+  background: var(--green-subtle);
+  border: 1px solid rgba(137,196,65,0.2);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 24px;
+  transition: all 0.3s;
+}
+.service-card:hover .service-icon {
+  background: rgba(137,196,65,0.15);
+  border-color: rgba(137,196,65,0.4);
+}
+.service-icon svg { width: 24px; height: 24px; stroke: var(--green); }
+
+.service-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 14px;
+  letter-spacing: -0.01em;
+}
+.service-desc {
+  font-size: 0.9rem;
+  color: var(--white-50);
+  line-height: 1.7;
+}
+.service-arrow {
+  position: absolute; bottom: 40px; right: 40px;
+  width: 36px; height: 36px;
+  border: 1px solid var(--gray-border);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.3s;
+  opacity: 0;
+}
+.service-card:hover .service-arrow {
+  opacity: 1;
+  border-color: var(--green);
+  background: var(--green);
+}
+.service-arrow svg { width: 14px; height: 14px; stroke: var(--black); }
+
+/* ── HOW WE WORK ── */
+.process-section { background: var(--off-black); }
+.process-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  margin-top: 64px;
+}
+.process-steps { display: flex; flex-direction: column; gap: 0; }
+.process-step {
+  display: flex; gap: 24px;
+  padding: 28px 0;
+  border-bottom: 1px solid var(--gray-border);
+  cursor: none;
+  transition: all 0.3s;
+  position: relative;
+}
+.process-step:first-child { padding-top: 0; }
+.process-step::before {
+  content: '';
+  position: absolute; left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--green);
+  transform: scaleY(0);
+  transition: transform 0.3s;
+  transform-origin: top;
+}
+.process-step:hover::before { transform: scaleY(1); }
+.process-step:hover { padding-left: 20px; }
+
+.step-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--green);
+  font-weight: 500;
+  min-width: 32px;
+  padding-top: 3px;
+}
+.step-content {}
+.step-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+.step-desc {
+  font-size: 0.875rem;
+  color: var(--white-50);
+  line-height: 1.6;
+}
+
+.process-visual {
+  position: relative;
+  height: 480px;
+  background: var(--gray-dark);
+  border: 1px solid var(--gray-border);
+  border-radius: 20px;
+  overflow: hidden;
+  padding: 32px;
+}
+.process-visual-inner {
+  height: 100%;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.code-line {
+  display: flex; align-items: center; gap: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+}
+.code-line-num { color: var(--gray-text); min-width: 24px; }
+.code-keyword { color: #c792ea; }
+.code-fn { color: #82aaff; }
+.code-str { color: var(--green); }
+.code-comment { color: #546e7a; }
+.code-var { color: #ffcb6b; }
+.code-punc { color: var(--white-50); }
+.code-cursor {
+  display: inline-block;
+  width: 2px; height: 14px;
+  background: var(--green);
+  margin-left: 2px;
+  vertical-align: middle;
+  animation: blink 1s ease-in-out infinite;
+}
+.process-visual-header {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--gray-border);
+}
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.dot-red { background: #ff5f57; }
+.dot-yellow { background: #febc2e; }
+.dot-green { background: #28c840; }
+.file-label {
+  margin-left: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--gray-text);
+}
+
+/* ── INDUSTRIES ── */
+.industries-section {}
+.industries-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 64px;
+}
+.industry-card {
+  padding: 32px 28px;
+  background: var(--gray-dark);
+  border: 1px solid var(--gray-border);
+  border-radius: 14px;
+  transition: all 0.3s;
+  cursor: none;
+  position: relative;
+  overflow: hidden;
+}
+.industry-card::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--green);
+  transform: scaleX(0);
+  transition: transform 0.3s;
+}
+.industry-card:hover::after { transform: scaleX(1); }
+.industry-card:hover {
+  border-color: rgba(137,196,65,0.3);
+  transform: translateY(-4px);
+}
+.industry-icon {
+  font-size: 2rem;
+  margin-bottom: 16px;
+  display: block;
+}
+.industry-name {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+.industry-desc {
+  font-size: 0.8rem;
+  color: var(--white-50);
+  line-height: 1.5;
+}
+
+/* ── CEO / ABOUT ── */
+.about-section { background: var(--off-black); }
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+.about-content {}
+.about-quote {
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.45;
+  letter-spacing: -0.02em;
+  margin-bottom: 32px;
+  color: var(--white);
+}
+.about-quote .qs { color: var(--green); }
+.ceo-card {
+  display: flex; align-items: center; gap: 16px;
+  padding: 20px 24px;
+  background: var(--gray-dark);
+  border: 1px solid var(--gray-border);
+  border-radius: 12px;
+  margin-top: 36px;
+}
+.ceo-avatar {
+  width: 52px; height: 52px;
+  background: linear-gradient(135deg, var(--green), var(--green-dim));
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--black);
+  flex-shrink: 0;
+  letter-spacing: -0.02em;
+}
+.ceo-info {}
+.ceo-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+.ceo-role {
+  font-size: 0.78rem;
+  color: var(--gray-text);
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 2px;
+}
+.ceo-badge {
+  margin-left: auto;
+  padding: 4px 10px;
+  background: var(--green-subtle);
+  border: 1px solid rgba(137,196,65,0.2);
+  border-radius: 20px;
+  font-size: 0.7rem;
+  color: var(--green);
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.about-visual {
+  position: relative;
+}
+.about-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.metric-card {
+  padding: 28px;
+  background: var(--gray-dark);
+  border: 1px solid var(--gray-border);
+  border-radius: 14px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+.metric-card:hover {
+  border-color: rgba(137,196,65,0.3);
+  transform: translateY(-3px);
+}
+.metric-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--green);
+}
+.metric-num {
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: var(--green);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.metric-label {
+  font-size: 0.82rem;
+  color: var(--gray-text);
+  line-height: 1.4;
+}
+.metric-card.dark {
+  background: var(--black);
+}
+.metric-card.dark .metric-num { color: var(--white); }
+
+/* ── TESTIMONIALS / WHY QS ── */
+.why-section {}
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 64px;
+}
+.why-card {
+  padding: 40px 36px;
+  background: var(--gray-dark);
+  border: 1px solid var(--gray-border);
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+  cursor: none;
+}
+.why-card:hover {
+  border-color: rgba(137,196,65,0.25);
+  transform: translateY(-4px);
+  box-shadow: 0 24px 48px rgba(0,0,0,0.4);
+}
+.why-card-accent {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 1px;
+  background: linear-gradient(90deg, var(--green), transparent);
+}
+.why-icon {
+  width: 44px; height: 44px;
+  margin-bottom: 24px;
+  background: var(--green-subtle);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+}
+.why-icon svg { width: 20px; height: 20px; stroke: var(--green); }
+.why-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  letter-spacing: -0.01em;
+}
+.why-desc {
+  font-size: 0.875rem;
+  color: var(--white-50);
+  line-height: 1.65;
+}
+
+/* ── CTA SECTION ── */
+.cta-section {
+  padding: 160px 48px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.cta-section .grid-bg { opacity: 0.4; }
+.cta-glow {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at center, rgba(137,196,65,0.10) 0%, transparent 65%);
+  pointer-events: none;
+}
+.cta-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--green);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+.cta-title {
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  margin-bottom: 20px;
+}
+.cta-title .accent { color: var(--green); }
+.cta-sub {
+  color: var(--white-50);
+  font-size: 1.05rem;
+  max-width: 480px;
+  margin: 0 auto 48px;
+  line-height: 1.7;
+}
+.cta-actions {
+  display: flex; align-items: center; justify-content: center; gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* ── FOOTER ── */
+footer {
+  background: var(--off-black);
+  border-top: 1px solid var(--gray-border);
+  padding: 64px 48px 40px;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 64px;
+  margin-bottom: 64px;
+}
+.footer-brand {}
+.footer-logo {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none;
+  margin-bottom: 16px;
+}
+.footer-tagline {
+  font-size: 0.875rem;
+  color: var(--gray-text);
+  line-height: 1.6;
+  max-width: 280px;
+  margin-bottom: 24px;
+}
+.footer-contact {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--green);
+  text-decoration: none;
+}
+.footer-col-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--white-50);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.footer-links {
+  list-style: none;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.footer-links a {
+  text-decoration: none;
+  color: var(--gray-text);
+  font-size: 0.875rem;
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--white); }
+
+.footer-bottom {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-top: 32px;
+  border-top: 1px solid var(--gray-border);
+}
+.footer-copy {
+  font-size: 0.8rem;
+  color: var(--gray-text);
+}
+.footer-copy span { color: var(--green); }
+.footer-built {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--gray-text);
+}
+
+/* ── REVEAL ON SCROLL ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--black); }
+::-webkit-scrollbar-thumb { background: var(--gray-border); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--green); }
+
+/* ── Responsive ── */
+@media (max-width: 1100px) {
+  .hero-visual { display: none; }
+  .services-grid { grid-template-columns: 1fr 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+}
+@media (max-width: 768px) {
+  nav { padding: 0 24px; }
+  .nav-links { display: none; }
+  section { padding: 80px 24px; }
+  .hero { padding: 100px 24px 60px; }
+  .hero-headline { font-size: 2.8rem; }
+  .services-grid { grid-template-columns: 1fr; }
+  .process-grid { grid-template-columns: 1fr; }
+  .about-grid { grid-template-columns: 1fr; }
+  .industries-grid { grid-template-columns: 1fr 1fr; }
+  .why-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+  .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+  .cta-section { padding: 100px 24px; }
+  body { cursor: auto; }
+  #cursor, #cursor-ring { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- ══════════════════════════════════════════
+     NAV
+════════════════════════════════════════════ -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="36" height="36" rx="8" fill="#89C441"/>
+        <path d="M8 18L14 10L22 26L28 18" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="28" cy="18" r="3" fill="black"/>
+        <circle cx="8" cy="18" r="3" fill="black"/>
+      </svg>
+    </div>
+    <span class="logo-text">Quantum<span>Synk</span></span>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#industries">Industries</a></li>
+    <li><a href="#about">Company</a></li>
+  </ul>
+
+  <div class="nav-cta">
+    <button class="btn-nav" onclick="scrollToContact()">Book a Call</button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     HERO
+════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="grid-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow-2"></div>
+
+  <div class="hero-eyebrow">
+    <span>B2B Technology Partner</span>
+  </div>
+
+  <h1 class="hero-headline">
+    Engineering<br/>
+    <span class="accent">Intelligence</span><br/>
+    <span class="outline">for Business.</span>
+  </h1>
+
+  <p class="hero-sub">
+    QuantumSynk builds bespoke software, data engineering, and analytics solutions that power the next generation of forward-thinking enterprises.
+  </p>
+
+  <div class="hero-actions">
+    <a href="#services" class="btn-primary">
+      Explore Services
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <a href="#about" class="btn-secondary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M10 9l5 3-5 3V9z"/></svg>
+      Our Story
+    </a>
+  </div>
+
+  <div class="hero-badges">
+    <div class="badge-item"><div class="badge-dot"></div><span>Enterprise-Grade Solutions</span></div>
+    <div class="badge-divider"></div>
+    <div class="badge-item"><div class="badge-dot"></div><span>End-to-End Delivery</span></div>
+    <div class="badge-divider"></div>
+    <div class="badge-item"><div class="badge-dot"></div><span>Data-First Engineering</span></div>
+  </div>
+
+  <!-- Hero Visual -->
+  <div class="hero-visual">
+    <div class="hero-ring">
+      <div class="hero-orbit-dot"></div>
+    </div>
+    <div class="hero-ring-2"></div>
+    <div class="hero-ring-3">
+      <div class="hero-orbit-dot-2"></div>
+    </div>
+    <div class="hero-center">
+      <svg width="52" height="52" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="36" height="36" rx="8" fill="#89C441"/>
+        <path d="M8 18L14 10L22 26L28 18" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="28" cy="18" r="3" fill="black"/>
+        <circle cx="8" cy="18" r="3" fill="black"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     STATS TICKER
+════════════════════════════════════════════ -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stats-track" id="statsTrack">
+      <div class="stat-pill">
+        <span class="stat-pill-num">50+</span>
+        <span class="stat-pill-label">Products Shipped</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-pill-num">98%</span>
+        <span class="stat-pill-label">Client Retention</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-pill-num">10TB+</span>
+        <span class="stat-pill-label">Data Processed Daily</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-pill-num">12+</span>
+        <span class="stat-pill-label">Industries Served</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-pill-num">4x</span>
+        <span class="stat-pill-label">Avg Efficiency Gain</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-pill-num">24/7</span>
+        <span class="stat-pill-label">System Uptime SLA</span>
+      </div>
+      <!-- Duplicate for loop -->
+      <div class="stat-pill">
+        <span class="stat-pill-num">50+</span>
+        <span class="stat-pill-label">Products Shipped</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-pill-num">98%</span>
+        <span class="stat-pill-label">Client Retention</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-pill-num">10TB+</span>
+        <span class="stat-pill-label">Data Processed Daily</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-pill-num">12+</span>
+        <span class="stat-pill-label">Industries Served</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-pill-num">4x</span>
+        <span class="stat-pill-label">Avg Efficiency Gain</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-pill-num">24/7</span>
+        <span class="stat-pill-label">System Uptime SLA</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SERVICES
+════════════════════════════════════════════ -->
+<section id="services">
+  <div class="reveal">
+    <div class="section-label">What We Build</div>
+    <h2 class="section-title">Solutions Built for <span class="accent">Scale</span></h2>
+    <p class="section-sub">We architect and deliver technology that becomes the backbone of your business — not just a tool.</p>
+  </div>
+
+  <div class="services-grid reveal">
+    <!-- Card 1 -->
+    <div class="service-card">
+      <span class="service-num">01</span>
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+        </svg>
+      </div>
+      <h3 class="service-title">Custom Software Engineering</h3>
+      <p class="service-desc">End-to-end product design and development. From MVP to enterprise-grade systems — we build software that scales with your ambition.</p>
+      <div class="service-arrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="service-card">
+      <span class="service-num">02</span>
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+        </svg>
+      </div>
+      <h3 class="service-title">Data Engineering & Pipelines</h3>
+      <p class="service-desc">Modern data infrastructure built for reliability. ETL pipelines, lakehouses, real-time streaming, and warehouse optimisation at any scale.</p>
+      <div class="service-arrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="service-card">
+      <span class="service-num">03</span>
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 20V10M12 20V4M6 20v-6"/>
+        </svg>
+      </div>
+      <h3 class="service-title">Business Intelligence & Analytics</h3>
+      <p class="service-desc">Transform raw data into decisive insight. Interactive dashboards, predictive models, and reporting systems that drive informed action.</p>
+      <div class="service-arrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="service-card">
+      <span class="service-num">04</span>
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
+        </svg>
+      </div>
+      <h3 class="service-title">AI & Machine Learning Integration</h3>
+      <p class="service-desc">Embed intelligence directly into your product or workflow. Recommendation engines, NLP, computer vision, and LLM-powered automation.</p>
+      <div class="service-arrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </div>
+
+    <!-- Card 5 -->
+    <div class="service-card">
+      <span class="service-num">05</span>
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/>
+        </svg>
+      </div>
+      <h3 class="service-title">API Design & Systems Integration</h3>
+      <p class="service-desc">Seamlessly connect your existing tools and third-party systems through robust, secure, and well-documented API architectures.</p>
+      <div class="service-arrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </div>
+
+    <!-- Card 6 -->
+    <div class="service-card">
+      <span class="service-num">06</span>
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </div>
+      <h3 class="service-title">Cloud Architecture & DevOps</h3>
+      <p class="service-desc">Resilient cloud infrastructure designed for uptime and growth. CI/CD pipelines, containerisation, auto-scaling, and cost optimisation.</p>
+      <div class="service-arrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     PROCESS
+════════════════════════════════════════════ -->
+<section id="process" class="process-section">
+  <div class="reveal">
+    <div class="section-label">How We Work</div>
+    <h2 class="section-title">From Brief to <span class="accent">Production</span></h2>
+    <p class="section-sub">A disciplined, transparent process that delivers predictably — every time.</p>
+  </div>
+
+  <div class="process-grid">
+    <div class="process-steps reveal">
+      <div class="process-step">
+        <span class="step-num">01</span>
+        <div class="step-content">
+          <h3 class="step-title">Discovery & Scoping</h3>
+          <p class="step-desc">Deep-dive into your business context, goals, and constraints. We define the problem before writing a single line of code.</p>
+        </div>
+      </div>
+      <div class="process-step">
+        <span class="step-num">02</span>
+        <div class="step-content">
+          <h3 class="step-title">Architecture & Design</h3>
+          <p class="step-desc">Systems architecture, data modelling, and technical roadmap aligned to your growth trajectory. No guesswork, only precision.</p>
+        </div>
+      </div>
+      <div class="process-step">
+        <span class="step-num">03</span>
+        <div class="step-content">
+          <h3 class="step-title">Agile Development</h3>
+          <p class="step-desc">Iterative delivery in structured sprints with continuous integration, code reviews, and live demos. Full visibility at every stage.</p>
+        </div>
+      </div>
+      <div class="process-step">
+        <span class="step-num">04</span>
+        <div class="step-content">
+          <h3 class="step-title">QA, Launch & Handoff</h3>
+          <p class="step-desc">Rigorous testing, performance tuning, deployment, and knowledge transfer. We don't disappear after go-live.</p>
+        </div>
+      </div>
+      <div class="process-step">
+        <span class="step-num">05</span>
+        <div class="step-content">
+          <h3 class="step-title">Ongoing Support & Growth</h3>
+          <p class="step-desc">Long-term partnerships built on accountability. Monitoring, optimisation, and scaling support as your business evolves.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="process-visual reveal reveal-delay-2">
+      <div class="process-visual-header">
+        <div class="dot dot-red"></div>
+        <div class="dot dot-yellow"></div>
+        <div class="dot dot-green"></div>
+        <span class="file-label">quantumsynk_pipeline.py</span>
+      </div>
+      <div class="process-visual-inner">
+        <div class="code-line"><span class="code-line-num">1</span><span class="code-comment"># QuantumSynk Data Pipeline — v2.4.1</span></div>
+        <div class="code-line"><span class="code-line-num">2</span></div>
+        <div class="code-line"><span class="code-line-num">3</span><span class="code-keyword">from</span><span style="color:#fff;margin:0 6px">qs_core</span><span class="code-keyword">import</span><span style="color:#fff;margin-left:6px">Pipeline, Transform</span></div>
+        <div class="code-line"><span class="code-line-num">4</span><span class="code-keyword">from</span><span style="color:#fff;margin:0 6px">qs_analytics</span><span class="code-keyword">import</span><span style="color:#fff;margin-left:6px">Aggregator</span></div>
+        <div class="code-line"><span class="code-line-num">5</span></div>
+        <div class="code-line"><span class="code-line-num">6</span><span class="code-keyword">class</span> <span class="code-fn">BusinessPipeline</span><span class="code-punc">(Pipeline):</span></div>
+        <div class="code-line"><span class="code-line-num">7</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-fn">def</span> <span class="code-fn">configure</span><span class="code-punc">(self):</span></div>
+        <div class="code-line"><span class="code-line-num">8</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">self</span><span class="code-punc">.</span><span class="code-fn">source</span> <span class="code-punc">=</span> <span class="code-str">"enterprise_db"</span></div>
+        <div class="code-line"><span class="code-line-num">9</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">self</span><span class="code-punc">.</span><span class="code-fn">transform</span><span class="code-punc">(</span><span class="code-fn">Transform</span><span class="code-punc">.</span><span class="code-fn">normalize</span><span class="code-punc">)</span></div>
+        <div class="code-line"><span class="code-line-num">10</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">self</span><span class="code-punc">.</span><span class="code-fn">aggregate</span><span class="code-punc">(</span></div>
+        <div class="code-line"><span class="code-line-num">11</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-var">metrics</span><span class="code-punc">=</span><span class="code-punc">[</span><span class="code-str">"revenue"</span><span class="code-punc">,</span> <span class="code-str">"churn"</span><span class="code-punc">,</span> <span class="code-str">"ltv"</span><span class="code-punc">]</span></div>
+        <div class="code-line"><span class="code-line-num">12</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-punc">)</span></div>
+        <div class="code-line"><span class="code-line-num">13</span></div>
+        <div class="code-line"><span class="code-line-num">14</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-fn">def</span> <span class="code-fn">run</span><span class="code-punc">(</span><span class="code-var">self</span><span class="code-punc">):</span></div>
+        <div class="code-line"><span class="code-line-num">15</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment"># Returns insight, not just data</span></div>
+        <div class="code-line"><span class="code-line-num">16</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> <span class="code-keyword">self</span><span class="code-punc">.</span><span class="code-fn">emit</span><span class="code-punc">(</span><span class="code-str">"dashboard"</span><span class="code-punc">)</span><span class="code-cursor"></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     INDUSTRIES
+════════════════════════════════════════════ -->
+<section id="industries">
+  <div class="reveal">
+    <div class="section-label">Industries</div>
+    <h2 class="section-title">Built Across <span class="accent">Every Sector</span></h2>
+    <p class="section-sub">Deep domain expertise means our solutions don't just work — they fit the way your industry actually operates.</p>
+  </div>
+
+  <div class="industries-grid">
+    <div class="industry-card reveal">
+      <span class="industry-icon">🏦</span>
+      <h3 class="industry-name">Fintech & Banking</h3>
+      <p class="industry-desc">Payment infrastructure, fraud detection, regulatory compliance, and real-time financial analytics.</p>
+    </div>
+    <div class="industry-card reveal reveal-delay-1">
+      <span class="industry-icon">🏥</span>
+      <h3 class="industry-name">Healthcare & MedTech</h3>
+      <p class="industry-desc">Patient data platforms, diagnostic tooling, and HIPAA-compliant data pipelines for healthcare systems.</p>
+    </div>
+    <div class="industry-card reveal reveal-delay-2">
+      <span class="industry-icon">⚡</span>
+      <h3 class="industry-name">Energy & Utilities</h3>
+      <p class="industry-desc">Grid monitoring, IoT integration, predictive maintenance, and operational efficiency systems.</p>
+    </div>
+    <div class="industry-card reveal reveal-delay-3">
+      <span class="industry-icon">🛒</span>
+      <h3 class="industry-name">Retail & E-Commerce</h3>
+      <p class="industry-desc">Personalisation engines, inventory intelligence, and omnichannel analytics platforms at scale.</p>
+    </div>
+    <div class="industry-card reveal">
+      <span class="industry-icon">🏭</span>
+      <h3 class="industry-name">Manufacturing & Logistics</h3>
+      <p class="industry-desc">Supply chain visibility, demand forecasting, and factory floor automation through data-driven systems.</p>
+    </div>
+    <div class="industry-card reveal reveal-delay-1">
+      <span class="industry-icon">📡</span>
+      <h3 class="industry-name">Telecoms & Media</h3>
+      <p class="industry-desc">Network performance analytics, subscriber intelligence, and real-time content delivery optimisation.</p>
+    </div>
+    <div class="industry-card reveal reveal-delay-2">
+      <span class="industry-icon">🎓</span>
+      <h3 class="industry-name">EdTech & Learning</h3>
+      <p class="industry-desc">Adaptive learning platforms, engagement analytics, and scalable LMS infrastructure for global reach.</p>
+    </div>
+    <div class="industry-card reveal reveal-delay-3">
+      <span class="industry-icon">🏛️</span>
+      <h3 class="industry-name">Government & Public Sector</h3>
+      <p class="industry-desc">Citizen-facing digital services, interoperable government data systems, and secure public infrastructure.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     WHY QUANTUMSYNK
+════════════════════════════════════════════ -->
+<section id="why" style="background: var(--off-black);">
+  <div class="reveal">
+    <div class="section-label">Why QuantumSynk</div>
+    <h2 class="section-title">The Partner Your Business <span class="accent">Deserves</span></h2>
+    <p class="section-sub">We're not a vendor. We're the engineering team your business never had — embedded, accountable, and invested in your success.</p>
+  </div>
+
+  <div class="why-grid">
+    <div class="why-card reveal">
+      <div class="why-card-accent"></div>
+      <div class="why-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      </div>
+      <h3 class="why-title">Speed Without Compromise</h3>
+      <p class="why-desc">We move fast because our process is tight. Agile sprints, continuous delivery, and zero rework mentality means your product ships on time — and works.</p>
+    </div>
+    <div class="why-card reveal reveal-delay-1">
+      <div class="why-card-accent"></div>
+      <div class="why-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <h3 class="why-title">Enterprise-Grade Reliability</h3>
+      <p class="why-desc">Security, scalability, and stability baked in from day one. We build like your system will serve a million users — because one day it will.</p>
+    </div>
+    <div class="why-card reveal reveal-delay-2">
+      <div class="why-card-accent"></div>
+      <div class="why-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      </div>
+      <h3 class="why-title">Long-Term Thinking</h3>
+      <p class="why-desc">We don't build to bill hours. We architect for the next three years so your investment grows in value rather than accumulating technical debt.</p>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-card-accent"></div>
+      <div class="why-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <h3 class="why-title">Embedded Partnership</h3>
+      <p class="why-desc">We integrate with your team, understand your business deeply, and make decisions like a co-founder — not a contractor clocking out at 5pm.</p>
+    </div>
+    <div class="why-card reveal reveal-delay-1">
+      <div class="why-card-accent"></div>
+      <div class="why-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      <h3 class="why-title">Data as a Core Discipline</h3>
+      <p class="why-desc">Every system we build is designed to generate, capture, and leverage data. We make your data an asset, not a liability.</p>
+    </div>
+    <div class="why-card reveal reveal-delay-2">
+      <div class="why-card-accent"></div>
+      <div class="why-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      </div>
+      <h3 class="why-title">Full-Stack Ownership</h3>
+      <p class="why-desc">From database schema to UI polish — one partner, full accountability. No finger-pointing across multiple agencies or handoff gaps.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     ABOUT / CEO
+════════════════════════════════════════════ -->
+<section id="about" class="about-section">
+  <div class="about-grid">
+    <div class="about-content">
+      <div class="section-label reveal">Our Company</div>
+      <h2 class="section-title reveal">Built by Builders,<br/><span class="accent">for Businesses</span></h2>
+
+      <p class="about-quote reveal reveal-delay-1">
+        "We started QuantumSynk because we kept seeing the same problem — great businesses held back by poor technology. Our mission is to change that, one <span class="qs">intelligent system</span> at a time."
+      </p>
+
+      <p class="section-sub reveal reveal-delay-2" style="margin-bottom: 0;">
+        QuantumSynk was founded on the belief that every ambitious business deserves access to world-class engineering. We partner with enterprises, scale-ups, and growth-stage companies to deliver technology that is not just functional — but transformative.
+      </p>
+
+      <div class="ceo-card reveal reveal-delay-3">
+        <div class="ceo-avatar">LV</div>
+        <div class="ceo-info">
+          <div class="ceo-name">Lawson Oladele Valentino</div>
+          <div class="ceo-role">Founder & Chief Executive Officer</div>
+        </div>
+        <div class="ceo-badge">CEO</div>
+      </div>
+    </div>
+
+    <div class="about-visual">
+      <div class="about-metrics">
+        <div class="metric-card reveal">
+          <div class="metric-num">50+</div>
+          <div class="metric-label">Products successfully shipped to market</div>
+        </div>
+        <div class="metric-card dark reveal reveal-delay-1">
+          <div class="metric-num" style="color: var(--green);">98%</div>
+          <div class="metric-label">Client satisfaction and retention rate</div>
+        </div>
+        <div class="metric-card dark reveal reveal-delay-2">
+          <div class="metric-num" style="color: var(--green);">4x</div>
+          <div class="metric-label">Average operational efficiency gain</div>
+        </div>
+        <div class="metric-card reveal reveal-delay-3">
+          <div class="metric-num">12+</div>
+          <div class="metric-label">Industries with active deployments</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     CTA
+════════════════════════════════════════════ -->
+<section id="contact" class="cta-section">
+  <div class="grid-bg"></div>
+  <div class="cta-glow"></div>
+
+  <div class="cta-eyebrow reveal">
+    <span>●</span> Ready to build?
+  </div>
+
+  <h2 class="cta-title reveal reveal-delay-1">
+    Let's Build<br/><span class="accent">Something</span><br/>Extraordinary.
+  </h2>
+
+  <p class="cta-sub reveal reveal-delay-2">
+    Tell us about your challenge. We'll tell you exactly how we'd solve it — no fluff, no sales pitch, just an honest conversation.
+  </p>
+
+  <div class="cta-actions reveal reveal-delay-3">
+    <a href="mailto:hello@quantumsynk.com" class="btn-primary" style="font-size: 1rem; padding: 18px 36px;">
+      Start a Conversation
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <a href="mailto:hello@quantumsynk.com" class="btn-secondary" style="font-size: 1rem; padding: 18px 36px;">
+      Schedule a Demo
+    </a>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════ -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#" class="footer-logo nav-logo">
+        <div class="logo-mark">
+          <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="36" height="36" rx="8" fill="#89C441"/>
+            <path d="M8 18L14 10L22 26L28 18" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="28" cy="18" r="3" fill="black"/>
+            <circle cx="8" cy="18" r="3" fill="black"/>
+          </svg>
+        </div>
+        <span class="logo-text">Quantum<span>Synk</span></span>
+      </a>
+      <p class="footer-tagline">Engineering intelligence for businesses that refuse to stand still. Your technology partner from brief to scale.</p>
+      <a href="mailto:hello@quantumsynk.com" class="footer-contact">hello@quantumsynk.com</a>
+    </div>
+
+    <div>
+      <div class="footer-col-title">Services</div>
+      <ul class="footer-links">
+        <li><a href="#">Software Engineering</a></li>
+        <li><a href="#">Data Engineering</a></li>
+        <li><a href="#">Business Intelligence</a></li>
+        <li><a href="#">AI & ML Integration</a></li>
+        <li><a href="#">API & Integrations</a></li>
+        <li><a href="#">Cloud & DevOps</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="footer-col-title">Company</div>
+      <ul class="footer-links">
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Our Process</a></li>
+        <li><a href="#">Case Studies</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Blog</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="footer-col-title">Contact</div>
+      <ul class="footer-links">
+        <li><a href="#">Book a Call</a></li>
+        <li><a href="#">Request a Demo</a></li>
+        <li><a href="#">Partner with Us</a></li>
+        <li><a href="#">LinkedIn</a></li>
+        <li><a href="#">Twitter / X</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p class="footer-copy">© 2025 QuantumSynk. All rights reserved. Founded by <span>Lawson Oladele Valentino</span>.</p>
+    <span class="footer-built mono">Built with precision. Delivered with purpose.</span>
+  </div>
+</footer>
+
+<!-- ══════════════════════════════════════════
+     SCRIPTS
+════════════════════════════════════════════ -->
+<script>
+// ── Custom Cursor ──
+const cursor = document.getElementById('cursor');
+const ring   = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx + 'px';
+  cursor.style.top  = my + 'px';
+});
+
+function animateRing() {
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px';
+  ring.style.top  = ry + 'px';
+  requestAnimationFrame(animateRing);
+}
+animateRing();
+
+document.querySelectorAll('a, button, .service-card, .industry-card, .why-card, .process-step').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.transform = 'translate(-50%,-50%) scale(2.5)';
+    cursor.style.background = 'rgba(137,196,65,0.6)';
+    ring.style.transform = 'translate(-50%,-50%) scale(1.5)';
+    ring.style.opacity = '0.3';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.transform = 'translate(-50%,-50%) scale(1)';
+    cursor.style.background = '#89C441';
+    ring.style.transform = 'translate(-50%,-50%) scale(1)';
+    ring.style.opacity = '0.6';
+  });
+});
+
+// ── Scroll Reveal ──
+const revealEls = document.querySelectorAll('.reveal');
+const observer  = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+revealEls.forEach(el => observer.observe(el));
+
+// ── Smooth scroll ──
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+
+function scrollToContact() {
+  document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ── Nav scroll opacity ──
+const nav = document.querySelector('nav');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 60) {
+    nav.style.background = 'rgba(0,0,0,0.92)';
+  } else {
+    nav.style.background = 'rgba(0,0,0,0.6)';
+  }
+});
+
+// ── Stats ticker duplicate for loop ──
+const track = document.getElementById('statsTrack');
+if (track) {
+  track.style.width = (track.scrollWidth) + 'px';
+}
+</script>
+</body>
+</html>

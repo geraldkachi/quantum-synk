@@ -37,7 +37,7 @@ export default function Process() {
       <Reveal>
         <SectionLabel>How We Work</SectionLabel>
         <h2 className="font-outfit text-4xl md:text-5xl font-extrabold tracking-tight leading-tight mb-4">
-          From Brief to <span className="text-[#89C441]">Production</span>
+          <span className='text-foreground' style={{color: '#ffffff' }}>From Brief to</span> <span className="text-[#89C441]">Production</span>
         </h2>
         <p className="font-outfit text-white/40 text-lg leading-relaxed max-w-lg">
           A disciplined, transparent process that delivers predictably — every time.

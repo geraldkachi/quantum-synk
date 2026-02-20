@@ -50,7 +50,7 @@ export default function About() {
           </Reveal>
 
           <Reveal delay={0.1}>
-            <p className="font-outfit text-2xl font-bold leading-snug tracking-tight mt-8 mb-8 text-white">
+            <p className="font-outfit text-2xl font-bold leading-snug tracking-tight mt-8 mb-8">
               "We started QuantumSynk because we kept seeing the same problem — great businesses
               held back by poor technology. Our mission is to change that, one{' '}
               <span className="text-[#89C441]">intelligent system</span> at a time."
@@ -58,7 +58,7 @@ export default function About() {
           </Reveal>
 
           <Reveal delay={0.2}>
-            <p className="font-outfit text-white/40 text-base leading-relaxed mb-8">
+            <p className="font-outfit text-white/40 text-muted-dark text-base leading-relaxed mb-8">
               QuantumSynk was founded on the belief that every ambitious business deserves access
               to world-class engineering. We partner with enterprises, scale-ups, and growth-stage
               companies to deliver technology that is not just functional — but transformative.
@@ -77,7 +77,7 @@ export default function About() {
                 <img 
                     src="/dele.jpg" 
                     alt="Lawson Oladele Valentino" 
-                    className="w-14 h-14 rounded-xl object-cover flex-shrink-0"
+                    className="w-14 h-14 rounded-xl object-cover shrink-0"
                   />
               <div className="flex-1">
                 <div className="font-outfit text-sm font-bold text-white">

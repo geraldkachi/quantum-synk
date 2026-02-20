@@ -1,6 +1,9 @@
+import { useTheme } from '../context/ThemeContext';
 import { QSLogo } from './UI';
 
 export default function Hero() {
+  const { theme } = useTheme();
+
   const scrollTo = (id: string) =>
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
@@ -19,11 +22,11 @@ export default function Hero() {
 
       {/* Glows */}
       <div
-        className="absolute -top-48 left-1/2 -translate-x-1/2 w-[900px] h-[600px] rounded-full pointer-events-none"
+        className="absolute -top-48 left-1/2 -translate-x-1/2 w-225 h-150 rounded-full pointer-events-none"
         style={{ background: 'radial-gradient(ellipse at center, rgba(137,196,65,0.12) 0%, transparent 70%)' }}
       />
       <div
-        className="absolute -bottom-24 -right-48 w-[600px] h-[600px] rounded-full pointer-events-none"
+        className="absolute -bottom-24 -right-48 w-150 h-150 rounded-full pointer-events-none"
         style={{ background: 'radial-gradient(ellipse at center, rgba(137,196,65,0.06) 0%, transparent 70%)' }}
       />
 
@@ -51,9 +54,22 @@ export default function Hero() {
         <span className="text-[#89C441]">Intelligence</span>
         <br />
         <span
+          // style={{
+          //   WebkitTextStroke: '2px rgba(255,255,255,0.18)',
+          //   color: 'transparent',
+          // }}
           style={{
-            WebkitTextStroke: '2px rgba(255,255,255,0.18)',
+            WebkitTextStroke: theme === 'dark'
+              ? '2px rgba(255,255,255,0.18)'
+              : '2px rgba(0,0,0,0.25)', // Darker stroke for light mode
             color: 'transparent',
+            // background: theme === 'dark'
+            //   ? 'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)'
+            //   : 'linear-gradient(90deg, transparent, rgba(0,0,0,0.5), transparent)', // Darker shimmer for light mode
+            backgroundSize: '200% 100%',
+            WebkitBackgroundClip: 'text',
+            backgroundClip: 'text',
+            animation: 'shimmer 3s ease-in-out infinite',
           }}
         >
           for Business.
@@ -63,7 +79,7 @@ export default function Hero() {
       {/* Sub */}
       <p
         className="font-outfit text-lg text-white/50 max-w-lg leading-relaxed mb-12"
-        style={{ opacity: 0, animation: 'slideUp 0.7s ease-out 0.5s forwards' }}
+        style={{ opacity: 0, animation: 'slideUp 0.7s ease-out 0.5s forwards', color: theme == 'dark' ? '' : 'rgba(0, 0, 0, 0.4)' }}
       >
         QuantumSynk builds bespoke software, data engineering, and analytics
         solutions that power the next generation of forward-thinking enterprises.
@@ -83,9 +99,19 @@ export default function Hero() {
             <path d="M5 12h14M12 5l7 7-7 7" />
           </svg>
         </button>
+        {/* <button
+          onClick={() => scrollTo('company')}
+          className="inline-flex items-center gap-2 px-8 py-4 font-outfit text-base font-medium rounded-xl border border-white/15 text-white/70 bg-transparent cursor-pointer transition-all duration-200 hover:border-white/40 hover:bg-white/6 hover:text-white"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M10 9l5 3-5 3V9z" />
+          </svg>
+          Our Story
+        </button> */}
         <button
           onClick={() => scrollTo('company')}
-          className="inline-flex items-center gap-2 px-8 py-4 font-outfit text-base font-medium rounded-xl border border-white/15 text-white/70 bg-transparent cursor-pointer transition-all duration-200 hover:border-white/40 hover:bg-white/[0.06] hover:text-white"
+          className="inline-flex items-center gap-2 px-8 py-4 font-outfit text-base font-medium rounded-xl border border-border text-muted bg-transparent cursor-pointer transition-all duration-200 hover:border-[#89C441] hover:bg-[#89C441]/10 hover:text-[#89C441]"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="12" cy="12" r="10" />
@@ -104,7 +130,7 @@ export default function Hero() {
           (badge, i) => (
             <div key={badge} className="flex items-center gap-6">
               {i > 0 && <div className="w-px h-7 bg-white/10" />}
-              <div className="flex items-center gap-2 text-sm text-white/40 font-outfit">
+              <div className="flex items-center gap-2 text-sm text-white/40 text-muted-dark font-outfit">
                 <span
                   className="w-1.5 h-1.5 rounded-full bg-[#89C441]"
                   style={{ animation: 'pulseGreen 2s ease-in-out infinite' }}
@@ -118,7 +144,7 @@ export default function Hero() {
 
       {/* Orbital visual */}
       <div
-        className="absolute right-16 top-1/2 w-[420px] h-[420px] hidden xl:block"
+        className="absolute right-16 top-1/2 w-105 h-105 hidden xl:block"
         style={{
           marginTop: '-210px',
           opacity: 0,
@@ -140,7 +166,7 @@ export default function Hero() {
           style={{ animation: 'rotateSlow 15s linear infinite reverse' }}
         />
         <div
-          className="absolute inset-[70px] rounded-full border border-[#89C441]/15"
+          className="absolute inset-17.5 rounded-full border border-[#89C441]/15"
           style={{ animation: 'rotateSlow 25s linear infinite' }}
         >
           <div className="absolute bottom-6 right-6 w-1.5 h-1.5 rounded-full bg-white/30" />
@@ -165,6 +191,14 @@ export default function Hero() {
         @keyframes pulseGreen{ 0%,100%{ box-shadow:0 0 0 0 rgba(137,196,65,0.4);} 50%{ box-shadow:0 0 0 8px rgba(137,196,65,0);} }
         @keyframes blink     { 0%,100%{ opacity:1;} 50%{ opacity:0;} }
         @keyframes ticker    { from{ transform:translateX(0);} to{ transform:translateX(-50%);} }
+        @keyframes shimmer {
+  0% { background-position: 0% 0; }
+  20% { background-position: -100% 0; }
+  40% { background-position: -200% 0; }
+  60% { background-position: -200% 0; }
+  80% { background-position: -100% 0; }
+  100% { background-position: 0% 0; }
+}
       `}</style>
     </section>
   );

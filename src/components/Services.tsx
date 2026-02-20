@@ -134,7 +134,7 @@ export default function Services() {
         <h2 className="font-outfit text-4xl md:text-5xl font-extrabold tracking-tight leading-tight mb-4">
           Solutions Built for <span className="text-[#89C441]">Scale</span>
         </h2>
-        <p className="font-outfit text-white/40 text-lg leading-relaxed max-w-lg">
+        <p className="font-outfit text-white/40 text-muted-dark text-lg leading-relaxed max-w-lg">
           We architect and deliver technology that becomes the backbone of your business — not just a tool.
         </p>
       </Reveal>

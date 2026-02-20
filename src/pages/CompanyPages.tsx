@@ -196,7 +196,7 @@ export function CaseStudiesPage() {
                       <p className="font-outfit text-xs text-white/30 mt-1">{c.client}</p>
                     </div>
                   </div>
-                  <span className="font-mono text-xs text-muted-dark">{c.duration}</span>
+                  <span className="font-mono text-xs text-muted-">{c.duration}</span>
                 </div>
 
                 <h3 className="font-outfit text-xl font-bold mb-3 tracking-tight">{c.title}</h3>
@@ -392,7 +392,7 @@ export function BlogPage() {
               <div className="p-8 bg-[#0a0a0a] border border-border rounded-2xl hover:border-[#89C441]/25 transition-all duration-300 hover:-translate-y-1 cursor-pointer group">
                 <div className="flex items-center justify-between mb-5">
                   <span className="px-3 py-1.5 bg-[#89C441]/10 border border-[#89C441]/20 rounded-full font-mono text-[10px] text-[#89C441]">{post.tag}</span>
-                  <span className="font-mono text-[10px] text-muted-dark">{post.date} · {post.readTime}</span>
+                  <span className="font-mono text-[10px] text-muted-dar">{post.date} · {post.readTime}</span>
                 </div>
                 <h3 className="font-outfit text-xl font-bold mb-3 leading-snug tracking-tight group-hover:text-[#89C441] transition-colors">{post.title}</h3>
                 <p className="font-outfit text-sm text-white/45 leading-relaxed mb-6">{post.excerpt}</p>

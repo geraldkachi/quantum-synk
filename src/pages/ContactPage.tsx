@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Navbar, Footer, PageHero, Reveal } from '../components/shared';
 
 const OFFICES = [
-  { city: 'Lagos', country: 'Nigeria', address: '14 Adeola Odeku St, Victoria Island', email: 'lagos@quantumsynk.com', phone: '+234 800 000 0000', tz: 'WAT (UTC+1)' },
+  { city: 'Lagos', country: 'Nigeria', address: '1 Johnson St, Yaba Onike Lagos', email: 'lagos@quantumsynk.com', phone: '+234 800 000 0000', tz: 'WAT (UTC+1)' },
   { city: 'London', country: 'United Kingdom', address: '1 Canada Square, Canary Wharf', email: 'london@quantumsynk.com', phone: '+44 20 0000 0000', tz: 'GMT/BST (UTC+0/+1)' },
   { city: 'Dubai', country: 'UAE', address: 'DIFC Gate Village, Building 3', email: 'dubai@quantumsynk.com', phone: '+971 4 000 0000', tz: 'GST (UTC+4)' },
 ];

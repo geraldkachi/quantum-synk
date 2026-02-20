@@ -99,12 +99,13 @@ function WhyCard({ item, delay }: { item: typeof WHY[0], delay: number }) {
 }
 
 export default function WhyQS() {
+  
   return (
     <section className="py-32 px-6 md:px-12 bg-[#0a0a0a]">
       <Reveal>
         <SectionLabel>Why QuantumSynk</SectionLabel>
         <h2 className="font-outfit text-4xl md:text-5xl font-extrabold tracking-tight leading-tight mb-4">
-          The Partner Your Business <span className="text-[#89C441]">Deserves</span>
+          <span style={{color: '#ffffff' }}>The Partner Your Business</span> <span className="text-[#89C441]">Deserves</span>
         </h2>
         <p className="font-outfit text-white/40 text-lg leading-relaxed max-w-lg">
           We're not a vendor. We're the engineering team your business never had — embedded, accountable, and invested in your success.

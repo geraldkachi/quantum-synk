@@ -48,7 +48,7 @@ export default function Industries() {
         <h2 className="font-outfit text-4xl md:text-5xl font-extrabold tracking-tight leading-tight mb-4">
           Built Across <span className="text-[#89C441]">Every Sector</span>
         </h2>
-        <p className="font-outfit text-white/40 text-lg leading-relaxed max-w-lg">
+        <p className="font-outfit text-white/40 text-muted-dark text-lg leading-relaxed max-w-lg">
           Deep domain expertise means our solutions don't just work — they fit the way your industry actually operates.
         </p>
       </Reveal>

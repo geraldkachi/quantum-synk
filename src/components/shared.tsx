@@ -283,9 +283,9 @@ export function Navbar({ currentPath = '' }) {
         onClick={() => setMobileOpen(!mobileOpen)} 
         aria-label="Menu"
       >
-        <span className={`block w-5.5 h-0.5 bg-white origin-center transition-all duration-300 ${mobileOpen ? 'rotate-45 translate-y-1.75' : ''}`} />
-        <span className={`block w-5.5 h-0.5 bg-white transition-all duration-300 ${mobileOpen ? 'opacity-0 scale-x-0' : ''}`} />
-        <span className={`block w-5.5 h-0.5 bg-white origin-center transition-all duration-300 ${mobileOpen ? '-rotate-45 -translate-y-1.75' : ''}`} />
+        <span className={`block w-5.5 h-0.5 bg-white ${theme === 'light' && '!bg-black' } origin-center transition-all duration-300 ${mobileOpen ? 'rotate-45 translate-y-1.75' : ''}`} />
+        <span className={`block w-5.5 h-0.5 bg-white ${theme === 'light' && '!bg-black' } transition-all duration-300 ${mobileOpen ? 'opacity-0 scale-x-0' : ''}`} />
+        <span className={`block w-5.5 h-0.5 bg-white ${theme === 'light' && '!bg-black' } origin-center transition-all duration-300 ${mobileOpen ? '-rotate-45 -translate-y-1.75' : ''}`} />
       </button>
 
       {/* Mobile menu */}
